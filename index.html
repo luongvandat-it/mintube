@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,41 +7,19 @@
     <title>MinTube - LuongVanDat</title>
     <link rel="icon" href="./img/luongvandat.jpg">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
-    <script src="./js/bootstrap.min.js"></script>
-    <script src="./js/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            let apiKey = "AIzaSyC_DARq-M-ZkTSybaR8nto2WIItmIHYOY8"
-            $("form").submit(e => {
-                e.preventDefault()
-                let search = $("#search").val()
-                videoSearch(apiKey, search, 5)
-            })
-        })
-        function videoSearch(apiKey, search, maxResults) {
-            $.get("https://www.googleapis.com/youtube/v3/search?key=" + apiKey + "&type=video&part=snippet&maxResults=" + maxResults + "&q=" + search, data => {
-                let video = ''
-                data.items.forEach(item => {
-                    video = `<iframe width="80%" height="500px" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen class="mt-3"></iframe>`
-                    $("#videos").append(video)
-                });
-            })
-        }
-    </script>
 </head>
-
 <body>
     <div class="container text-center">
         <div class="row">
             <div class="col mt-4">
-                <h3 class="text-success font-weight-bold">USING YOUTUBE SMARTER - SAVE YOUR TIME</h4>
+                <h3 class="text-success font-weight-bold">USING YOUTUBE SMARTER - SAVE YOUR TIME</h3> <!-- Changed closing tag from </h4> to </h3> -->
             </div>
         </div>
         <div class="row mt-3">
             <div class="col">
-                <form>
-                    <input id="search" class="p-1" style="width: 80%;" placeholder="Type what you really need!">
-                    <input type="submit" class="btn btn-success" value="Search">
+                <form id="search-form"> <!-- Add an ID to the form for easy reference in JS -->
+                    <input id="search" class="p-1" style="width: 80%;" placeholder="Type what you really need!" required> <!-- Added required attribute to the input field -->
+                    <button type="submit" class="btn btn-success">Search</button> <!-- Changed input type="submit" to button -->
                 </form>
             </div>
         </div>
@@ -52,6 +29,28 @@
             </div>
         </div>
     </div>
-</body>
+<!-- Moved JS scripts to the bottom of the body -->
+<script src="./js/jquery.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let apiKey = "AIzaSyC_DARq-M-ZkTSybaR8nto2WIItmIHYOY8";
+        $("#search-form").submit(function (event) { // Use jQuery to handle form submission
+            event.preventDefault();
+            let search = $("#search").val();
+            videoSearch(apiKey, search, 5);
+        });
+    });
 
+    function videoSearch(apiKey, search, maxResults) {
+        $.get("https://www.googleapis.com/youtube/v3/search?key=" + apiKey + "&type=video&part=snippet&maxResults=" + maxResults + "&q=" + search, function (data) { // Use a callback function for the $.get method
+            let video = '';
+            data.items.forEach(function (item) {
+                video = '<iframe width="80%" height="500px" src="https://www.youtube.com/embed/' + item.id.videoId + '" frameborder="0" allowfullscreen class="mt-3"></iframe>'; // Use single quotes for consistency and escape the single quotes in the HTML string
+                $("#videos").append(video);
+            });
+        });
+    }
+</script>
+</body>
 </html>
